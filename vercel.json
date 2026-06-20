@@ -1,10 +1,9 @@
 {
-  "buildCommand": "echo 'Static site'",
-  "outputDirectory": ".",
-  "cleanUrls": true,
+  "buildCommand": "echo 'Static files'",
+  "outputDirectory": "public",
   "rewrites": [
     {
-      "source": "/",
+      "source": "/(.*)",
       "destination": "/The_Sacred_Blueprint.html"
     }
   ]
