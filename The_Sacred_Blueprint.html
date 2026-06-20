@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sacred Blueprint</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  :root{
+    --navy-deep:#0d1b2e;
+    --navy:#10243d;
+    --navy-light:#16314f;
+    --gold:#d9b676;
+    --gold-bright:#f0d49a;
+    --gold-deep:#b9803f;
+    --copper:#c97f4a;
+    --cream:#f3ead8;
+    --ink-soft:rgba(243,234,216,0.82);
+    --ink-faint:rgba(243,234,216,0.55);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--navy-deep);
+    font-family:'EB Garamond', serif;
+    color:var(--cream);
+    overflow-x:hidden;
+  }
+
+  .deck{
+    width:100%;
+    max-width:1500px;
+    margin:0 auto;
+  }
+
+  .slide{
+    position:relative;
+    min-height:100vh;
+    padding:64px 72px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(217,182,118,0.07), transparent 45%),
+      radial-gradient(ellipse at 85% 85%, rgba(201,127,74,0.06), transparent 50%),
+      linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 55%, var(--navy-deep) 100%);
+    border-bottom:1px solid rgba(217,182,118,0.12);
+  }
+
+  .slide:last-child{border-bottom:none;}
+
+  /* decorative corner line-work, echoes the PDF's swirl motifs */
+  .corner-art{
+    position:absolute;
+    width:220px;
+    height:220px;
+    pointer-events:none;
+    opacity:0.55;
+  }
+  .corner-art svg{width:100%;height:100%;}
+  .corner-art.tl{top:-30px;left:-30px;}
+  .corner-art.br{bottom:-30px;right:-30px;transform:rotate(180deg);}
+
+  h1.display{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    color:var(--gold-bright);
+    letter-spacing:0.2px;
+    line-height:1.12;
+    margin:0 0 18px 0;
+  }
+
+  .eyebrow{
+    font-family:'EB Garamond', serif;
+    font-style:italic;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--copper);
+    font-size:14px;
+    margin-bottom:10px;
+  }
+
+  p.lede{
+    color:var(--ink-soft);
+    font-size:19px;
+    line-height:1.6;
+    max-width:560px;
+  }
+
+  .infinity-svg{display:block;}
+
+  /* ===== Community badge (corner, every slide) ===== */
+  .community-badge{
+    position:absolute;
+    top:28px;
+    right:32px;
+    z-index:20;
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:9px 18px 9px 14px;
+    background:rgba(13,27,46,0.55);
+    border:1px solid rgba(217,182,118,0.45);
+    border-radius:999px;
+    text-decoration:none;
+    backdrop-filter:blur(6px);
+    transition:all 0.25s ease;
+    box-shadow:0 2px 14px rgba(0,0,0,0.25);
+  }
+  .community-badge:hover{
+    background:rgba(217,182,118,0.14);
+    border-color:var(--gold-bright);
+    transform:translateY(-1px);
+    box-shadow:0 4px 18px rgba(217,182,118,0.25);
+  }
+  .community-badge .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--gold-bright);
+    box-shadow:0 0 8px var(--gold-bright);
+    flex-shrink:0;
+  }
+  .community-badge span{
+    font-family:'EB Garamond', serif;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    color:var(--gold-bright);
+    white-space:nowrap;
+  }
+
+  @media (max-width:700px){
+    .community-badge{
+      top:16px; right:16px;
+      padding:7px 13px 7px 11px;
+    }
+    .community-badge span{font-size:10.5px;}
+  }
+
+  /* ===== Slide-specific layouts ===== */
+
+  /* Slide 1: Cover */
+  .slide-cover{
+    align-items:center;
+    text-align:center;
+  }
+  .slide-cover .infinity-svg{margin:0 auto 36px auto;}
+  .slide-cover h1.display{font-size:64px;}
+  .slide-cover .tagline{
+    font-style:italic;
+    color:var(--ink-soft);
+    font-size:19px;
+    letter-spacing:0.01em;
+  }
+
+  /* Slide 2: split compare */
+  .split-row{
+    display:flex;
+    gap:60px;
+    align-items:flex-start;
+    margin-top:50px;
+  }
+  .split-col{flex:1; text-align:center;}
+  .split-col .icon-wrap{height:200px; display:flex; align-items:center; justify-content:center; margin-bottom:28px;}
+  .split-col .caption{color:var(--copper); font-size:18px; line-height:1.5; max-width:380px; margin:0 auto;}
+  .split-divider{width:1px; background:linear-gradient(180deg, transparent, rgba(217,182,118,0.4), transparent); align-self:stretch; margin-top:10px;}
+  .slide-2-title{text-align:center; font-size:42px; margin-bottom:10px;}
+  .slide-2-footer{text-align:center; color:var(--ink-soft); font-size:18px; line-height:1.6; margin-top:50px;}
+
+  /* Slide 3: ecosystem */
+  .slide-3-grid{display:flex; align-items:center; gap:40px;}
+  .slide-3-left{flex:1; max-width:480px;}
+  .slide-3-left h1.display{font-size:46px;}
+  .pillars{margin-top:46px; display:flex; flex-direction:column; gap:34px;}
+  .pillar-row{display:flex; align-items:baseline; gap:14px;}
+  .pillar-num{color:var(--gold-bright); font-size:19px; min-width:170px;}
+  .pillar-line{flex:1; height:1px; background:linear-gradient(90deg, rgba(217,182,118,0.5), transparent);}
+  .slide-3-right{flex:1.1; display:flex; justify-content:center;}
+
+  /* Slide 4: roots */
+  .slide-4-grid{display:flex; align-items:center; gap:70px;}
+  .slide-4-left{flex:0 0 420px;}
+  .slide-4-right{flex:1;}
+  .slide-4-right h1.display{font-size:44px;}
+  .slide-4-right p{color:var(--ink-soft); font-size:18px; line-height:1.65; margin-bottom:18px;}
+
+  /* Slide 5 */
+  .slide-5-title{text-align:center; font-size:38px; margin-bottom:50px;}
+  .megaphone-wrap{height:220px; display:flex; align-items:center; justify-content:center; margin-bottom:24px;}
+  .split-col h3{font-size:19px; letter-spacing:0.02em; margin-bottom:14px;}
+  .split-col h3.old{color:var(--gold-bright);}
+  .split-col h3.new{color:var(--copper);}
+  .split-col p.body-text{color:var(--ink-soft); font-size:17px; line-height:1.6; max-width:340px; margin:0 auto;}
+
+  /* Slide 6 */
+  .slide-6-grid{display:flex; align-items:center; gap:60px;}
+  .slide-6-left{flex:1; max-width:480px;}
+  .slide-6-left h1.display{font-size:42px;}
+  .slide-6-left p{color:var(--ink-soft); font-size:18px; line-height:1.65; margin-bottom:14px;}
+  .slide-6-right{flex:1.1; display:flex; justify-content:center;}
+
+  /* Slide 7 */
+  .slide-7-title{text-align:center; font-size:40px; margin-bottom:46px;}
+  .wall-wrap{display:flex; justify-content:center; margin-bottom:40px;}
+  .slide-7-foot{text-align:center; color:var(--ink-soft); font-size:18px; line-height:1.65; max-width:760px; margin:0 auto;}
+
+  /* Slide 8: table */
+  .slide-8-title{font-size:38px; margin-bottom:40px;}
+  table.diagnose{
+    width:100%;
+    border-collapse:collapse;
+  }
+  table.diagnose th{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    color:var(--gold-bright);
+    font-size:21px;
+    text-align:center;
+    padding:14px 20px 18px;
+    border-bottom:1px solid rgba(217,182,118,0.5);
+  }
+  table.diagnose th:first-child{visibility:hidden;}
+  table.diagnose td{
+    padding:24px 26px;
+    border-bottom:1px solid rgba(217,182,118,0.18);
+    font-size:16.5px;
+    line-height:1.55;
+    vertical-align:top;
+  }
+  table.diagnose td:first-child{
+    color:var(--gold-bright);
+    font-family:'Cormorant Garamond', serif;
+    font-size:19px;
+    width:18%;
+  }
+  table.diagnose td:nth-child(2){color:var(--ink-soft); border-right:1px solid rgba(217,182,118,0.18); width:41%;}
+  table.diagnose td:nth-child(3){color:var(--ink-soft); width:41%;}
+  table.diagnose tr:last-child td{border-bottom:none;}
+
+  /* Slide 9 */
+  .slide-9-title{text-align:center; font-size:40px; margin-bottom:40px;}
+  .pipe-wrap{display:flex; justify-content:center; margin-bottom:36px;}
+  .slide-9-foot{display:flex; gap:50px; max-width:980px; margin:0 auto;}
+  .slide-9-foot p{flex:1; color:var(--ink-soft); font-size:17px; line-height:1.65; margin:0;}
+  .foot-divider{width:1px; background:rgba(217,182,118,0.3);}
+
+  /* Slide 10 */
+  .slide-10-title{text-align:center; font-size:40px; margin-bottom:6px;}
+  .slide-10-sub{text-align:center; color:var(--ink-soft); font-size:17px; max-width:900px; margin:0 auto 30px; line-height:1.6;}
+  .infinity10-wrap{display:flex; justify-content:center; position:relative; margin-top:10px;}
+  .label-1{position:absolute; top:38%; left:8%; text-align:left;}
+  .label-2{position:absolute; top:8%; left:38%; text-align:left;}
+  .label-3{position:absolute; top:38%; right:6%; text-align:left;}
+  .label-4{position:absolute; bottom:2%; left:42%; text-align:left;}
+  .label-1 .num, .label-2 .num, .label-3 .num, .label-4 .num{color:var(--gold-bright); font-size:19px; display:block;}
+  .label-1 .sub, .label-2 .sub, .label-3 .sub, .label-4 .sub{color:var(--ink-faint); font-size:14.5px; display:block; margin-top:2px;}
+
+  /* Slide 11 */
+  .slide-11-grid{display:flex; align-items:center; gap:50px;}
+  .slide-11-left{flex:1; max-width:440px;}
+  .slide-11-left h1.display{font-size:42px;}
+  .slide-11-left p{color:var(--ink-soft); font-size:18px; line-height:1.65; margin-bottom:16px;}
+  .slide-11-left .next-label{color:var(--gold-bright); font-size:18px; margin-top:6px;}
+  .slide-11-right{flex:1.2;}
+
+  /* Slide 12: CTA */
+  .slide-cta{
+    align-items:center;
+    text-align:center;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(217,182,118,0.10), transparent 55%),
+      linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 55%, var(--navy-deep) 100%);
+  }
+  .cta-glyph{margin-bottom:30px;}
+  .slide-cta .eyebrow{font-size:15px;}
+  .slide-cta h1.display{font-size:46px; max-width:780px; margin:0 auto 16px;}
+  .slide-cta p.cta-body{
+    color:var(--ink-soft);
+    font-size:18.5px;
+    line-height:1.7;
+    max-width:680px;
+    margin:0 auto 38px;
+  }
+  .cta-button{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    padding:18px 38px;
+    background:linear-gradient(135deg, var(--gold) 0%, var(--copper) 100%);
+    color:var(--navy-deep);
+    text-decoration:none;
+    border-radius:999px;
+    font-family:'EB Garamond', serif;
+    font-size:18px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    box-shadow:0 6px 30px rgba(217,182,118,0.35);
+    transition:all 0.25s ease;
+  }
+  .cta-button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 36px rgba(217,182,118,0.5);
+  }
+  .cta-button svg{width:18px; height:18px; flex-shrink:0;}
+  .cta-footnote{
+    margin-top:26px;
+    color:var(--ink-faint);
+    font-size:14px;
+    font-style:italic;
+  }
+  .cta-footnote a{color:var(--gold); text-decoration:underline; text-decoration-color:rgba(217,182,118,0.4);}
+  .cta-footnote a:hover{color:var(--gold-bright);}
+
+  @media (max-width:900px){
+    .slide{padding:48px 28px;}
+    .split-row, .slide-3-grid, .slide-4-grid, .slide-6-grid, .slide-9-foot, .slide-11-grid{flex-direction:column;}
+    .split-divider, .foot-divider{display:none;}
+    .slide-cover h1.display{font-size:40px;}
+    table.diagnose{font-size:14px;}
+    table.diagnose td, table.diagnose th{padding:14px 10px;}
+    .infinity10-wrap svg{width:100%; height:auto;}
+    .label-1, .label-2, .label-3, .label-4{position:static; margin-bottom:14px; text-align:center;}
+    .infinity10-wrap{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ========================= SLIDE 1 — COVER ========================= -->
+  <section class="slide slide-cover">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <div class="corner-art tl">
+      <svg viewBox="0 0 220 220" fill="none"><path d="M10 100 Q 60 40, 110 90 T 210 70" stroke="#d9b676" stroke-width="1" opacity="0.5"/><path d="M5 140 Q 70 110, 120 150 T 215 130" stroke="#c97f4a" stroke-width="1" opacity="0.4"/></svg>
+    </div>
+    <div class="corner-art br">
+      <svg viewBox="0 0 220 220" fill="none"><path d="M10 100 Q 60 40, 110 90 T 210 70" stroke="#d9b676" stroke-width="1" opacity="0.5"/><path d="M5 140 Q 70 110, 120 150 T 215 130" stroke="#c97f4a" stroke-width="1" opacity="0.4"/></svg>
+    </div>
+
+    <svg class="infinity-svg" width="260" height="120" viewBox="0 0 260 120" fill="none">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="260" y2="0">
+          <stop offset="0" stop-color="#f0d49a"/>
+          <stop offset="0.5" stop-color="#d9b676"/>
+          <stop offset="1" stop-color="#b9803f"/>
+        </linearGradient>
+      </defs>
+      <path d="M65 60 C 65 30, 95 30, 130 60 C 165 90, 195 90, 195 60 C 195 30, 165 30, 130 60 C 95 90, 65 90, 65 60 Z" stroke="url(#g1)" stroke-width="3.5" fill="none"/>
+      <path d="M60 60 C 60 25, 98 25, 130 60 C 162 95, 200 95, 200 60 C 200 25, 162 25, 130 60 C 98 95, 60 95, 60 60 Z" stroke="url(#g1)" stroke-width="1.5" fill="none" opacity="0.6"/>
+    </svg>
+
+    <h1 class="display">The Sacred Blueprint</h1>
+    <p class="tagline">Architecting visibility and financial flow for the soul-led entrepreneur.</p>
+  </section>
+
+  <!-- ========================= SLIDE 2 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <h1 class="display slide-2-title">Stop chasing the market and allow the return.</h1>
+
+    <div class="split-row">
+      <div class="split-col">
+        <div class="icon-wrap">
+          <svg width="160" height="180" viewBox="0 0 160 180" fill="none">
+            <path d="M30 170 L50 100 L40 95 L65 60 L58 56 L80 20" stroke="#7a8aa0" stroke-width="3" fill="none"/>
+            <path d="M80 20 L70 35 M80 20 L92 32" stroke="#7a8aa0" stroke-width="3"/>
+            <path d="M55 170 L75 90 L65 86 L95 45" stroke="#d9b676" stroke-width="3" fill="none"/>
+            <path d="M95 45 L83 55 M95 45 L100 60" stroke="#d9b676" stroke-width="3"/>
+            <path d="M85 170 L100 110 L92 107 L118 70" stroke="#c97f4a" stroke-width="3" fill="none"/>
+            <path d="M118 70 L107 78 M118 70 L122 84" stroke="#c97f4a" stroke-width="3"/>
+            <ellipse cx="80" cy="60" rx="65" ry="40" stroke="#f0d49a" stroke-width="1.5" opacity="0.35" fill="none"/>
+          </svg>
+        </div>
+        <p class="caption">Success is not about<br>aggressive tactics</p>
+      </div>
+      <div class="split-divider"></div>
+      <div class="split-col">
+        <div class="icon-wrap">
+          <svg width="200" height="180" viewBox="0 0 200 180" fill="none">
+            <defs><radialGradient id="g2" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f0d49a"/><stop offset="0.6" stop-color="#c97f4a"/><stop offset="1" stop-color="#16314f" stop-opacity="0"/></radialGradient></defs>
+            <circle cx="100" cy="90" r="70" stroke="url(#g2)" stroke-width="6" fill="none"/>
+            <path d="M40 60 C 70 40, 130 40, 150 75 M160 120 C 130 140, 70 140, 50 105" stroke="#d9b676" stroke-width="2.5" fill="none"/>
+            <path d="M55 55 C 100 75, 100 105, 145 125" stroke="#f0d49a" stroke-width="2" fill="none"/>
+            <path d="M48 75 L60 75 L55 65 M152 105 L140 105 L145 115" stroke="#d9b676" stroke-width="2"/>
+          </svg>
+        </div>
+        <p class="caption">It is about creating the conditions where<br>traffic and financial flow become inevitable.</p>
+      </div>
+    </div>
+
+    <p class="slide-2-footer">The online space becomes easier when you stop forcing<br>outcomes and start mastering your energetic flow.</p>
+  </section>
+
+  <!-- ========================= SLIDE 3 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <div class="slide-3-grid">
+      <div class="slide-3-left">
+        <h1 class="display">The ecosystem of inevitable return.</h1>
+        <p class="lede">Three interdependent pillars dictate your ability to circulate value and wealth in the online space.</p>
+        <div class="pillars">
+          <div class="pillar-row"><span class="pillar-num">1. Sacred Alignment<br><span style="color:var(--ink-faint); font-size:14px;">(The Foundation)</span></span><span class="pillar-line"></span></div>
+          <div class="pillar-row"><span class="pillar-num">2. Visibility &amp; Traffic<br><span style="color:var(--ink-faint); font-size:14px;">(The Outward Flow)</span></span><span class="pillar-line"></span></div>
+          <div class="pillar-row"><span class="pillar-num">3. Energetics of Money<br><span style="color:var(--ink-faint); font-size:14px;">(The Return Flow)</span></span><span class="pillar-line"></span></div>
+        </div>
+      </div>
+      <div class="slide-3-right">
+        <svg width="420" height="420" viewBox="0 0 420 420" fill="none">
+          <defs>
+            <radialGradient id="g3" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stop-color="#f8e6b8"/>
+              <stop offset="0.4" stop-color="#d9b676"/>
+              <stop offset="0.7" stop-color="#b9803f"/>
+              <stop offset="1" stop-color="#10243d" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="210" cy="210" r="195" stroke="#d9b676" stroke-width="1" opacity="0.25" fill="none"/>
+          <circle cx="210" cy="210" r="150" stroke="#c97f4a" stroke-width="1.5" opacity="0.4" fill="none"/>
+          <circle cx="210" cy="210" r="105" fill="url(#g3)" opacity="0.85"/>
+          <path d="M150 210 C 150 175, 185 175, 210 210 C 235 245, 270 245, 270 210 C 270 175, 235 175, 210 210 C 185 245, 150 245, 150 210 Z" stroke="#10243d" stroke-width="3" fill="none" opacity="0.7"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 4 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <div class="slide-4-grid">
+      <div class="slide-4-left">
+        <svg width="100%" height="380" viewBox="0 0 420 380" fill="none">
+          <defs>
+            <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f0d49a"/>
+              <stop offset="1" stop-color="#b9803f"/>
+            </linearGradient>
+          </defs>
+          <line x1="210" y1="0" x2="210" y2="170" stroke="url(#g4)" stroke-width="5"/>
+          <path d="M210 170 C 180 190, 150 195, 120 200 M210 170 C 240 190, 270 195, 300 200 M210 170 C 200 195, 175 215, 140 230 M210 170 C 220 195, 245 215, 280 230 M210 170 C 195 200, 160 240, 110 260 M210 170 C 225 200, 260 240, 310 260 M210 170 C 205 210, 195 250, 175 290 M210 170 C 215 210, 225 250, 245 290" stroke="url(#g4)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M210 170 C 188 185, 170 188, 150 192 M210 170 C 232 185, 250 188, 270 192" stroke="url(#g4)" stroke-width="2" fill="none" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="slide-4-right">
+        <h1 class="display">Everything begins with Sacred Alignment.</h1>
+        <p>Before you can circulate value, you must be anchored in your truth. Without alignment, visibility only amplifies static.</p>
+        <p>Once aligned, your foundation is set to project a clear voice into the world.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 5 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <h1 class="display slide-5-title" style="text-align:center;">Owning your message creates a magnetic inevitability.</h1>
+    <div class="split-row">
+      <div class="split-col">
+        <div class="megaphone-wrap">
+          <svg width="180" height="160" viewBox="0 0 180 160" fill="none">
+            <path d="M40 80 L90 55 L90 105 L40 95 Z" fill="#8a96a8"/>
+            <rect x="20" y="78" width="22" height="18" rx="3" fill="#8a96a8"/>
+            <path d="M90 55 C 110 50, 120 60, 120 80 C 120 100, 110 110, 90 105" stroke="#8a96a8" stroke-width="5" fill="none"/>
+            <path d="M125 70 L140 65 M130 80 L148 80 M125 90 L140 95" stroke="#d9b676" stroke-width="3"/>
+            <path d="M130 55 L145 40 M135 100 L150 115" stroke="#c97f4a" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3 class="old">The Old Way: Forced Reach</h3>
+        <p class="body-text">When you own your message and project a clear voice, you no longer need to shout.</p>
+      </div>
+      <div class="split-divider"></div>
+      <div class="split-col">
+        <div class="megaphone-wrap">
+          <svg width="200" height="160" viewBox="0 0 200 160" fill="none">
+            <defs><radialGradient id="g5" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff4d6"/><stop offset="0.5" stop-color="#f0d49a"/><stop offset="1" stop-color="#16314f" stop-opacity="0"/></radialGradient></defs>
+            <circle cx="100" cy="80" r="55" fill="url(#g5)"/>
+            <path d="M100 80 C 70 60, 50 60, 30 80 C 50 100, 70 100, 100 80 C 130 60, 150 60, 170 80 C 150 100, 130 100, 100 80" stroke="#d9b676" stroke-width="2" fill="none" opacity="0.7"/>
+            <circle cx="100" cy="80" r="78" stroke="#c97f4a" stroke-width="1" opacity="0.4" fill="none"/>
+          </svg>
+        </div>
+        <h3 class="new">The Sacred Blueprint: Magnetic Inevitability</h3>
+        <p class="body-text">The traffic will become inevitable for you to come back.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 6 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <div class="slide-6-grid">
+      <div class="slide-6-left">
+        <h1 class="display">The engine of your business is unapologetic giving.</h1>
+        <p>Visibility is not about taking attention; it is about initiating a circuit.</p>
+        <p>By giving your truth without resistance, you activate the Law of Circulation.</p>
+      </div>
+      <div class="slide-6-right">
+        <svg width="380" height="380" viewBox="0 0 380 380" fill="none">
+          <defs>
+            <linearGradient id="g6a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0d49a"/><stop offset="1" stop-color="#d9b676"/></linearGradient>
+            <linearGradient id="g6b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9b676"/><stop offset="1" stop-color="#b9803f"/></linearGradient>
+          </defs>
+          <circle cx="190" cy="190" r="140" stroke="url(#g6a)" stroke-width="6" fill="none" stroke-dasharray="700 250"/>
+          <circle cx="190" cy="190" r="140" stroke="url(#g6b)" stroke-width="6" fill="none" stroke-dasharray="250 700" transform="rotate(180 190 190)"/>
+          <path d="M310 130 L295 145 L305 150 Z" fill="#f0d49a"/>
+          <path d="M70 250 L85 235 L75 230 Z" fill="#c97f4a"/>
+          <text x="190" y="180" text-anchor="middle" fill="#f3ead8" font-family="Cormorant Garamond, serif" font-size="26">The Law of</text>
+          <text x="190" y="210" text-anchor="middle" fill="#f3ead8" font-family="Cormorant Garamond, serif" font-size="26">Circulation</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 7 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <h1 class="display slide-7-title" style="text-align:center;">The hidden blockage to your natural flow.</h1>
+    <div class="wall-wrap">
+      <svg width="420" height="280" viewBox="0 0 420 280" fill="none">
+        <defs>
+          <linearGradient id="g7" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f0d49a"/><stop offset="1" stop-color="#b9803f"/></linearGradient>
+        </defs>
+        <path d="M10 140 C 60 120, 100 160, 150 140 C 200 120, 230 150, 260 140" stroke="url(#g7)" stroke-width="6" fill="none"/>
+        <g opacity="0.85">
+          <rect x="250" y="40" width="160" height="200" fill="none" stroke="#3a4f6b" stroke-width="2"/>
+          <line x1="250" y1="80" x2="410" y2="80" stroke="#3a4f6b" stroke-width="1.5"/>
+          <line x1="250" y1="120" x2="410" y2="120" stroke="#3a4f6b" stroke-width="1.5"/>
+          <line x1="250" y1="160" x2="410" y2="160" stroke="#3a4f6b" stroke-width="1.5"/>
+          <line x1="250" y1="200" x2="410" y2="200" stroke="#3a4f6b" stroke-width="1.5"/>
+          <line x1="290" y1="40" x2="290" y2="240" stroke="#3a4f6b" stroke-width="1.5"/>
+          <line x1="330" y1="40" x2="330" y2="240" stroke="#3a4f6b" stroke-width="1.5"/>
+          <line x1="370" y1="40" x2="370" y2="240" stroke="#3a4f6b" stroke-width="1.5"/>
+        </g>
+        <path d="M260 140 C 280 120, 300 150, 290 170 C 280 190, 300 200, 290 215 M260 140 C 280 160, 270 175, 285 190" stroke="#f0d49a" stroke-width="3" fill="none" opacity="0.9"/>
+      </svg>
+    </div>
+    <p class="slide-7-foot">For many soul-led, spiritually oriented entrepreneurs, the system breaks at the moment of return. The Law of Circulation is halted by a single, powerful barrier: a fear-based relationship with money.</p>
+  </section>
+
+  <!-- ========================= SLIDE 8 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <h1 class="display slide-8-title">Diagnosing your energetic posture.</h1>
+    <table class="diagnose">
+      <tr><th></th><th>The Resistant Posture<br><span style="font-size:14px; font-style:italic; color:var(--ink-faint);">(Fear-Based)</span></th><th>The Aligned Posture<br><span style="font-size:14px; font-style:italic; color:var(--ink-faint);">(Flow-Based)</span></th></tr>
+      <tr><td>Relationship<br>with Money</td><td>Viewed as a scarce resource to be hoarded or feared.</td><td>Viewed as neutral energy meant to be circulated.</td></tr>
+      <tr><td>State of Giving</td><td>Hesitant, holding back the best value for fear of being exploited.</td><td>Unapologetic, giving without resistance.</td></tr>
+      <tr><td>Resulting Traffic</td><td>Forced, exhausting, and inconsistent.</td><td>Inevitable, magnetic, and returning.</td></tr>
+    </table>
+  </section>
+
+  <!-- ========================= SLIDE 9 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <h1 class="display slide-9-title" style="text-align:center;">Fear chokes the circuit.</h1>
+    <div class="pipe-wrap">
+      <svg width="640" height="220" viewBox="0 0 640 220" fill="none">
+        <defs><linearGradient id="g9" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f0d49a"/><stop offset="1" stop-color="#d9b676" stop-opacity="0.3"/></linearGradient></defs>
+        <rect x="20" y="60" width="600" height="100" rx="10" stroke="#d9b676" stroke-width="2" fill="none" opacity="0.4"/>
+        <path d="M280 60 L320 110 L280 160" fill="#16314f" opacity="0.7"/>
+        <path d="M360 60 L320 110 L360 160" fill="#16314f" opacity="0.7"/>
+        <path d="M30 110 C 100 90, 180 130, 250 110 C 290 100, 310 110, 320 110 C 330 110, 350 120, 390 110 C 460 95, 540 125, 610 110" stroke="url(#g9)" stroke-width="5" fill="none"/>
+        <path d="M295 175 L320 145" stroke="#d9b676" stroke-width="2" marker-end="url(#arrow9)"/>
+      </svg>
+    </div>
+    <div class="slide-9-foot">
+      <p>Unless you can overcome that or shift that, you will not be able to circulate money.</p>
+      <div class="foot-divider"></div>
+      <p>You can have perfect alignment and massive visibility, but if your energetic valve is constricted by fear, the financial return cannot reach you.</p>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 10 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <h1 class="display slide-10-title" style="text-align:center;">The Complete Sacred Blueprint.</h1>
+    <p class="slide-10-sub">Everything is connected. Your alignment creates your voice. Your voice creates visibility and giving. But your receiving is entirely gated by your energetic relationship with money.</p>
+
+    <div class="infinity10-wrap">
+      <svg width="600" height="320" viewBox="0 0 600 320" fill="none">
+        <defs>
+          <linearGradient id="g10" x1="0" y1="0" x2="600" y2="320">
+            <stop offset="0" stop-color="#f0d49a"/>
+            <stop offset="0.5" stop-color="#d9b676"/>
+            <stop offset="1" stop-color="#b9803f"/>
+          </linearGradient>
+        </defs>
+        <path d="M150 160 C 150 100, 230 100, 300 160 C 370 220, 450 220, 450 160 C 450 100, 370 100, 300 160 C 230 220, 150 220, 150 160 Z" stroke="url(#g10)" stroke-width="8" fill="none"/>
+        <path d="M150 160 C 150 105, 225 105, 300 160 C 375 215, 450 215, 450 160 C 450 105, 375 105, 300 160 C 225 215, 150 215, 150 160 Z" stroke="#16314f" stroke-width="2" fill="none" opacity="0.5"/>
+        <circle cx="450" cy="160" r="16" fill="#16314f" stroke="#f0d49a" stroke-width="2"/>
+        <rect x="442" y="155" width="16" height="12" rx="2" fill="#f0d49a"/>
+      </svg>
+      <div class="label-1"><span class="num">1. Sacred Alignment</span><span class="sub">Anchoring the clear voice</span></div>
+      <div class="label-2"><span class="num">2. Magnetic Visibility</span><span class="sub">The outward flow of unapologetic giving</span></div>
+      <div class="label-3"><span class="num">3. The Law of Circulation</span><span class="sub">The inevitable return</span></div>
+      <div class="label-4"><span class="num">4. Energetics of Money</span><span class="sub">The Gatekeeper</span></div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 11 ========================= -->
+  <section class="slide">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <div class="slide-11-grid">
+      <div class="slide-11-left">
+        <h1 class="display">Preparing for the final shift.</h1>
+        <p>You have mastered your alignment. You understand the truth of visibility and traffic.</p>
+        <p>Now, you must undertake the final mental exercise.</p>
+        <p class="next-label">Next: Mastering the Energetics of Money.</p>
+      </div>
+      <div class="slide-11-right">
+        <svg width="100%" height="320" viewBox="0 0 500 320" fill="none">
+          <defs><linearGradient id="g11" x1="0" y1="0" x2="1" y2="0.6"><stop offset="0" stop-color="#16314f"/><stop offset="0.4" stop-color="#d9b676"/><stop offset="1" stop-color="#f0d49a"/></linearGradient></defs>
+          <path d="M30 280 L150 200 L130 190 L260 130 L240 122 L370 70 L470 40" stroke="url(#g11)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M30 280 L40 260 M150 200 L160 180 M260 130 L268 112" stroke="#0d1b2e" stroke-width="3"/>
+          <circle cx="470" cy="40" r="60" fill="url(#g11)" opacity="0.25"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 12 — CTA (NEW) ========================= -->
+  <section class="slide slide-cta">
+    <a class="community-badge" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      <span class="dot"></span><span>Join our free community</span>
+    </a>
+    <div class="corner-art tl"><svg viewBox="0 0 220 220" fill="none"><path d="M10 100 Q 60 40, 110 90 T 210 70" stroke="#d9b676" stroke-width="1" opacity="0.5"/></svg></div>
+    <div class="corner-art br"><svg viewBox="0 0 220 220" fill="none"><path d="M10 100 Q 60 40, 110 90 T 210 70" stroke="#d9b676" stroke-width="1" opacity="0.5"/></svg></div>
+
+    <div class="cta-glyph">
+      <svg width="220" height="100" viewBox="0 0 220 100" fill="none">
+        <defs><linearGradient id="g12" x1="0" y1="0" x2="220" y2="0"><stop offset="0" stop-color="#f0d49a"/><stop offset="0.5" stop-color="#d9b676"/><stop offset="1" stop-color="#b9803f"/></linearGradient></defs>
+        <path d="M55 50 C 55 25, 80 25, 110 50 C 140 75, 165 75, 165 50 C 165 25, 140 25, 110 50 C 80 75, 55 75, 55 50 Z" stroke="url(#g12)" stroke-width="3" fill="none"/>
+      </svg>
+    </div>
+
+    <div class="eyebrow">For Purpose-Driven Holistic Practitioners</div>
+    <h1 class="display">Align with your soul purpose.<br>Elevate your frequency.</h1>
+    <p class="cta-body">Join a free private community for purpose-driven holistic practitioners ready to unlock soul alignment, embody higher consciousness, and step into their divine leadership — plus access The Soulpreneur Framework.</p>
+
+    <a class="cta-button" href="https://www.skool.com/soulpurpose/about?ref=5a03a12787a44b6d835705f7b75acb5e" target="_blank" rel="noopener">
+      Join the Free Community + Access the Framework
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+
+    <div class="cta-footnote">Learn more about the work at <a href="https://satori-mindset.com/" target="_blank" rel="noopener">satori-mindset.com</a></div>
+  </section>
+
+</div>
+</body>
+</html>
